@@ -1,4 +1,4 @@
-def managerIp='10.0.2.94'
+def managerIp='10.0.0.53'
 
 node('master'){
     stage('Checkout'){
