@@ -1,4 +1,4 @@
-def managerIp='10.0.0.53'
+def managerIp='10.0.0.34'
 
 node('master'){
     stage('Checkout'){
@@ -10,6 +10,7 @@ node('master'){
     }
 
     stage('Deploy'){
+        sh "ssh -oStrictHostKeyChecking=no ec2-user@${managerIp} docker login --password admin123 --username admin registry.slowcoder.com"
         sh "ssh -oStrictHostKeyChecking=no ec2-user@${managerIp} docker stack deploy --compose-file docker-compose.yml --with-registry-auth demo"
     }
 }
