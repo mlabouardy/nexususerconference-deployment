@@ -1,4 +1,5 @@
-def managerIp='10.0.0.34'
+def managerIp = '10.0.0.34'
+def registry = 'registry.slowcoder.com'
 
 node('master'){
     stage('Checkout'){
@@ -10,14 +11,13 @@ node('master'){
     }
 
     stage('Test'){
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            sh "echo $USERNAME"
-            sh "echo $PASSWORD"
-        }
+        
     }
 
     stage('Deploy'){
-        sh "ssh -oStrictHostKeyChecking=no ec2-user@${managerIp} docker login --password admin123 --username admin registry.slowcoder.com"
-        sh "ssh -oStrictHostKeyChecking=no ec2-user@${managerIp} docker stack deploy --compose-file docker-compose.yml --with-registry-auth demo"
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            sh "ssh -oStrictHostKeyChecking=no ec2-user@${managerIp} docker login --password $PASSWORD --username $USERNAME ${registry}"
+            sh "ssh -oStrictHostKeyChecking=no ec2-user@${managerIp} docker stack deploy --compose-file docker-compose.yml --with-registry-auth demo"
+        }
     }
 }
