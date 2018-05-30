@@ -10,10 +10,6 @@ node('master'){
         sh "scp -o StrictHostKeyChecking=no docker-compose.yml ec2-user@${managerIp}:/home/ec2-user"
     }
 
-    stage('Test'){
-        
-    }
-
     stage('Deploy'){
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             sh "ssh -oStrictHostKeyChecking=no ec2-user@${managerIp} docker login --password $PASSWORD --username $USERNAME ${registry}"
